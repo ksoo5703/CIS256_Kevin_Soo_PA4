@@ -74,7 +74,7 @@ class GuessTheWordGame:
         """ Checks if the game is over and displays a win or loss message to the user. """
         if "_" not in self._word_progress_str:
             print("\nCongratulations!. You guessed the word.")
-            print(f"The word was {self._word_progress_str}")
+            print(f"The word was {self._word_progress_str}.")
             return True
         if self.remaining_guesses == 0:
             print("\nSorry, you ran out of guesses.")
@@ -90,7 +90,7 @@ class GuessTheWordGame:
         # Display game information
         print(f"\nMystery Word: {self._word_progress_str}")
         print(f"Guessed Letters: {self._guessed_letters}")
-        print(f"Remaing Guesses: {self._remaining_guesses}")
+        print(f"Remaining Guesses: {self._remaining_guesses}")
 
         # Ask user for letter and validate
         selected_letter = input("\nGuess a letter: ")
