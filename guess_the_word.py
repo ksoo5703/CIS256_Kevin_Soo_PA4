@@ -25,7 +25,7 @@ class GuessTheWordGame:
     _guessed_letters = []
     _word_progress_str = ""
     _remaining_guesses = 0
-    _STARTING_GUESS_COUNT = 5
+    _STARTING_GUESS_COUNT = 6
 
     def __init__(self):
         self.reset_game()
@@ -45,7 +45,9 @@ class GuessTheWordGame:
 
     def _validate_guessed_letter(self, val):
         """ Checks if a guessed letter is a valid entry """
-        if not val.isalpha():
+        if not isinstance(val, str):
+            print("Please enter only letters a-z.")
+        elif not val.isalpha():
             print("Please enter only letters a-z.")
         elif len(val) != 1:
             print("Please enter a single letter.")
@@ -58,20 +60,26 @@ class GuessTheWordGame:
 
     def _update_word_progress(self, selected_letter):
         """ Updates the word_progress_str and returns if a letter was changed """
+        word_progress_array = list(self._word_progress_str)
+        letter_in_word = False
         for i, letter in enumerate(self._chosen_word):
             if letter == selected_letter:
-                self._word_progress_str[i] = selected_letter
-                return True
+                word_progress_array[i] = selected_letter
+                letter_in_word = True
 
-        return False
+        self._word_progress_str = "".join(word_progress_array)
+        return letter_in_word
 
     def check_game_over(self):
         """ Checks if the game is over and displays a win or loss message to the user. """
         if "_" not in self._word_progress_str:
-            print("Congratulations!. You guessed the word.")
+            print("\nCongratulations!. You guessed the word.")
+            print(f"The word was {self._word_progress_str}")
             return True
         if self.remaining_guesses == 0:
-            print("Sorry, you ran out of guesses.")
+            print("\nSorry, you ran out of guesses.")
+            print(f"The word was {self._chosen_word}.")
+            return True
 
         return False
 
@@ -80,29 +88,26 @@ class GuessTheWordGame:
         performs necessary backend game functionality after letter is guessed. """
 
         # Display game information
-        print(self._word_progress_str)
+        print(f"\nMystery Word: {self._word_progress_str}")
         print(f"Guessed Letters: {self._guessed_letters}")
         print(f"Remaing Guesses: {self._remaining_guesses}")
 
         # Ask user for letter and validate
-        selected_letter = input("Guess a letter: ")
+        selected_letter = input("\nGuess a letter: ")
         while not self._validate_guessed_letter(selected_letter):
             selected_letter = input("Guess a letter: ")
 
         # Update game attributes
         selected_letter = selected_letter.lower()
         self._guessed_letters.append(selected_letter)
-        self._remaining_guesses -= 1
 
         # Display result of letter guess
         update_check = self._update_word_progress(selected_letter)
         if update_check:
-            print(f"There is a(n) {selected_letter} in the word!")
+            print(f"Correct, the letter {selected_letter} is in the word!")
         else:
-            print(f"The letter {selected_letter} is not in the word.")
-
-        # Display word progress
-        print(self._word_progress_str)
+            print(f"Incorrect, the letter {selected_letter} is not in the word.")
+            self._remaining_guesses -= 1
 
     def reset_game(self):
         """ Resets the game state and chooses a new word. """
@@ -110,15 +115,19 @@ class GuessTheWordGame:
         self._remaining_guesses = self._STARTING_GUESS_COUNT
         self._chosen_word = random.choice(self._word_list)
         self._word_progress_str = "_" * len(self._chosen_word)
-        print("The mystery word has been chosen.")
+        print("\nThe mystery word has been chosen.")
+
 if __name__ == '__main__':
+    print("\nWelcome to the Word Guesser Game")
+    print("\nInstructions: \nGuess a letter to see if it is in the mystery word")
+    print("If the guessed letter is in the word it does not cost a guess.")
+    print("The game ends when the mystery word is guessed or you run out of guesses.")
     game = GuessTheWordGame()
     replay = "y"
-    print("Welcome to the Word Guesser Game")
 
     while replay == "y":
         while not game.check_game_over():
             game.guess_letter()
-        replay = input("Play again? (y/n): ")
+        replay = input("\nPlay again? (y/n): ")
         if replay == "y":
             game.reset_game()
