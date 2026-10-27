@@ -90,6 +90,7 @@ class GuessTheWordGame:
             selected_letter = input("Guess a letter: ")
 
         # Update game attributes
+        selected_letter = selected_letter.lower()
         self._guessed_letters.append(selected_letter)
         self._remaining_guesses -= 1
 
@@ -110,3 +111,14 @@ class GuessTheWordGame:
         self._chosen_word = random.choice(self._word_list)
         self._word_progress_str = "_" * len(self._chosen_word)
         print("The mystery word has been chosen.")
+
+game = GuessTheWordGame()
+replay = "y"
+print("Welcome to the Word Guesser Game")
+
+while replay == "y":
+    while not game.check_game_over():
+        game.guess_letter()
+    replay = input("Play again? (y/n): ")
+    if replay == "y":
+        game.reset_game()
